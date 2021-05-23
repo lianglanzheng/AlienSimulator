@@ -1,0 +1,11 @@
+# Git 忽略文件，访问 https://docs.github.com/cn/github/using-git/ignoring-files 可了解更多信息。
+
+# 系统文件
+.DS_Store
+
+# Visual Studio 配置文件
+/.vs/
+
+# Visual Studio 输出文件
+/*/bin/
+/*/obj/

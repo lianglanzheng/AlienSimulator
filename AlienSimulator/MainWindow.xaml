@@ -1,0 +1,110 @@
+﻿<Window x:Class="AlienSimulator.MainWindow" x:Name="Main"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AlienSimulator"
+        mc:Ignorable="d"
+        Title="AlienSimulator" SizeToContent="WidthAndHeight" SnapsToDevicePixels="True">
+    <Window.Resources>
+        <ResourceDictionary>
+            <local:Converter_double_Percent x:Key="Converter_double_Percent"/>
+            <local:Converter_double_PercentLong x:Key="Converter_double_PercentLong"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/RoundCardStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="local:MainWindow.BeginReproduce" Executed="BeginReproduce_Executed" CanExecute="BeginReproduce_CanExecute"/>
+    </Window.CommandBindings>
+    <Grid Height="420">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="400"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" x:Name="Overview">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="8" Width="96" Height="96">
+                <TextBlock Text="👽" FontSize="72" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+            <Grid Grid.Row="1" Margin="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="繁殖天数："/>
+                <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding ElementName=Main, Path=DaysReproduce}"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="计算精度："/>
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ElementName=Main, Path=Precision}"/>
+                <Button Grid.Row="2" Grid.Column="3" Content="开始" Command="local:MainWindow.BeginReproduce"/>
+            </Grid>
+            <Border Grid.Row="3" Margin="8" Style="{StaticResource RoundCardStyles}">
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="8"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="逝去天数" FontWeight="Black"/>
+                    <TextBlock Grid.Row="2" Text="{Binding ElementName=Main, Path=DaysElapsed}" FontSize="72" Foreground="#00B020" HorizontalAlignment="Center"/>
+                </Grid>
+            </Border>
+            <Border Grid.Row="4" Margin="8" Style="{StaticResource RoundCardStyles}">
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="8"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="灭绝概率" FontWeight="Black"/>
+                    <TextBlock Grid.Row="2" Text="{Binding ElementName=Main, Path=DeathProbability, Converter={StaticResource Converter_double_Percent}}" FontSize="32" Foreground="#B00020" HorizontalAlignment="Center"/>
+                </Grid>
+            </Border>
+        </Grid>
+        <Grid Grid.Column="1" x:Name="Detail">
+            <ListBox Margin="8" ItemsSource="{Binding ElementName=Main, Path=ReproduceResults}" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="180"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="5"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="5"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="第"/>
+                                <TextBlock Grid.Column="2" Text="{Binding Days}" FontWeight="Black"/>
+                                <TextBlock Grid.Column="4" Text="天"/>
+                            </Grid>
+                            <TextBlock Grid.Column="2" Text="{Binding Probability, Converter={StaticResource Converter_double_PercentLong}}"/>
+                            <ProgressBar Grid.Column="4" Value="{Binding Probability}" Minimum="0" Maximum="1"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Grid>
+</Window>
